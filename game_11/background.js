@@ -35,11 +35,28 @@ export class Background {
             new Layer(this.game, this.width, this.height, 0.8, this.layer4image),
             new Layer(this.game, this.width, this.height, 1, this.layer5image)
         ];
+
+        this.layer1Ver2 = layer1Forest;
+        this.layer2Ver2 = layer2Forest;
+        this.layer3Ver2 = layer3Forest;
+        this.layer4Ver2 = layer4Forest;
+        this.layer5Ver2 = layer5Forest; 
+
+
+        this.backgroundLayersVer2 = [
+            new Layer(this.game, this.width, this.height, 0, this.layer1Ver2),
+            new Layer(this.game, this.width, this.height, 0.2, this.layer2Ver2),
+            new Layer(this.game, this.width, this.height, 0.4, this.layer3Ver2),
+            new Layer(this.game, this.width, this.height, 0.8, this.layer4Ver2),
+            new Layer(this.game, this.width, this.height, 1, this.layer5Ver2)
+        ];
     }
     update() {
-        this.backgroundLayers.forEach(layer => layer.update());
+        //this.backgroundLayers.forEach(layer => layer.update());
+        this.backgroundLayersVer2.forEach(layer => layer.update());
     }
     draw(context) {
-        this.backgroundLayers.forEach(layer => layer.draw(context));
+        //this.backgroundLayers.forEach(layer => layer.draw(context));
+        this.backgroundLayersVer2.forEach(layer => layer.draw(context));
     }
 }

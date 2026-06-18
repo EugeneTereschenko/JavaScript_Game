@@ -12,8 +12,19 @@
     transform: translate(-50%, -50%);
     max-width: 100%;
     max-height: 100%;
+    font-family: 'Creepster', cursive;
 }
 
-#player, #layer1, #layer2, #layer3, #layer4, #layer5, #enemyFlying, #enemyPlant, #enemySpider, #fire, #boom {
+#player, #layer1, #layer2, #layer3, #layer4, #layer5, #enemyFlying, #enemyPlant, #enemySpider, #fire, #boom, #layer1Forest, #layer2Forest, #layer3Forest, #layer4Forest, #layer5Forest {
     display: none;
+}
+
+ #enemySpiderSmall, #heart, #lives, #enemBat1, #enemBat2, #enemBat3, #enemDigger, #enemy1Ghost, #enemy2Ghost, #enemy3Ghost, #enemy4Ghost, #enemyGhostZombie, #enemyHand, #enemyRaven, #enemySpinner, #enemyWorm, #enemyZombie  {
+    display: none;
+}
+
+.creepster-regular {
+  font-family: "Creepster", system-ui;
+  font-weight: 400;
+  font-style: normal;
 }

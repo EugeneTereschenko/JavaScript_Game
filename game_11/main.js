@@ -2,27 +2,28 @@ import { Player } from './player.js';
 import { InputHandler } from './input.js';
 import { Background } from './background.js';
 import { states } from './playerStates.js';
-import { FlyingEnemy, GroundEnemy, ClimbingEnemy } from './enemies.js';
+import { FlyingEnemy, GroundEnemy, HandEnemy, GroundZombieEnemy, ClimbingEnemy, SmallSpider, BatFlying, BatFlyingTwo, BatFlyingTree, RavenFlying, DiggerEnemy  } from './enemies.js';
 import { UI } from './ui.js';
 
 window.addEventListener('load', (e) => {
     const canvas = document.getElementById('canvas1');
     const ctx = canvas.getContext('2d');
 
-    canvas.width = 500;
+    canvas.width = 900;
     canvas.height = 500;
 
     class Game {
         constructor(width, height) {
             this.width = width;
             this.height = height;
-            this.groundMargin = 80;
+            this.groundMargin = 40;
             this.speed = 0;
             this.maxSpeed = 3;
             this.background = new Background(this);
             this.player = new Player(this);
             this.input = new InputHandler(this);
             this.UI = new UI(this);
+            this.floatingMessages = [];
             this.particles = [];
             this.enemies = [];
             this.collisions = [];
@@ -30,9 +31,10 @@ window.addEventListener('load', (e) => {
             this.enemyTimer = 0;
             this.enemyInterval = 1000;
             this.time = 0;
-            this.maxTime = 20000;
+            this.maxTime = 30000;
             this.gameOver = false;
-            this.winningScore = 5;
+            this.lives = 5;
+            this.winningScore = 40;
             this.debug = false;
             this.score = 0;
             this.fontColor = 'black';
@@ -55,16 +57,14 @@ window.addEventListener('load', (e) => {
             }
             this.enemies.forEach(enemy => {
                 enemy.update(deltaTime);
-                if (enemy.markedForDeletion) {
-                    this.enemies.splice(this.enemies.indexOf(enemy), 1);
-                }
+            });
+
+            this.floatingMessages.forEach(message => {
+                message.update();
             });
 
             this.particles.forEach((particle, index) => {
                 particle.update();
-                if (particle.markedForDeletion) {
-                    this.particles.splice(index, 1);
-                }
             });
             if (this.particles.length > this.maxParticles) {
                 this.particles.length = this.maxParticles;
@@ -72,32 +72,62 @@ window.addEventListener('load', (e) => {
 
             this.collisions.forEach((collision, index) => {
                 collision.update(deltaTime);
-                if (collision.markedForDeletion) {
-                    this.collisions.splice(index, 1);
-                }
             });
+
+            this.collisions = this.collisions.filter(collision => !collision.markedForDeletion);
+            this.enemies =  this.enemies.filter(enemy => !enemy.markedForDeletion);
+            this.particles = this.particles.filter(particle => !particle.markedForDeletion);
+            this.floatingMessages =  this.floatingMessages.filter(message => !message.markedForDeletion);
+
         }
         draw(context) {
             this.background.draw(context);
             this.player.draw(context);
             this.enemies.forEach(enemy => enemy.draw(context));
+            this.floatingMessages.forEach(message => {
+                message.draw(context);
+            });
             this.particles.forEach(particle => particle.draw(context));
             this.collisions.forEach(collision => collision.draw(context));
             this.UI.draw(context);
         }
         addEnemy() {
             if (this.speed > 0 && Math.random() < 0.5) {
-                this.enemies.push(new GroundEnemy(this));
+
+                const groundEnemies = [
+                    GroundEnemy,
+                    DiggerEnemy,
+                    GroundZombieEnemy,
+                    HandEnemy 
+                ]
+
+                const EnemyClass = groundEnemies[Math.floor(Math.random() * groundEnemies.length)];
+
+                this.enemies.push(new EnemyClass(this));
             } else if (this.speed > 0) {
-                this.enemies.push(new ClimbingEnemy(this));
+                if (Math.random() < 0.5) {
+                    this.enemies.push(new ClimbingEnemy(this));
+                } else {
+                    this.enemies.push(new SmallSpider(this));
+                }
             }
-            this.enemies.push(new FlyingEnemy(this));
+
+            const flyingEnemies = [
+                FlyingEnemy,
+                BatFlying,
+                BatFlyingTwo,
+                BatFlyingTree,
+                RavenFlying
+                ];
+
+            const EnemyClass = flyingEnemies[Math.floor(Math.random() * flyingEnemies.length)];
+            this.enemies.push(new EnemyClass(this));
+
         }
 
     }
 
     const game = new Game(canvas.width, canvas.height);
-    console.log(game);
 
     let lastTime = 0;
 
