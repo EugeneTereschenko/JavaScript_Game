@@ -147,6 +147,26 @@ export class HandEnemy extends Enemy {
     }
 }
 
+export class WormEnemy extends Enemy {
+    constructor(game) {
+        super(game);
+        this.game = game;
+        this.spriteWidth = 80;
+        this.spriteHeight = 60;
+        this.width = this.spriteWidth;
+        this.height = this.spriteHeight;
+        this.x = this.game.width + Math.random() * this.game.width * 0.5;
+        this.y = this.game.height - this.height - this.game.groundMargin;
+        this.image = document.getElementById('enemyWorm');
+        this.speedX = 0;
+        this.speedY = 0;
+        this.maxFrame = 5;
+    }
+    update(deltaTime) {
+        super.update(deltaTime);
+    }
+}
+
 export class ClimbingEnemy extends Enemy {
     constructor(game) {
         super(game);
@@ -320,8 +340,8 @@ export class SpinnerFlying extends Enemy {
     constructor(game) {
         super(game);
         this.game = game;
-        this.spriteWidth = 270;
-        this.spriteHeight = 190;
+        this.spriteWidth = 214;
+        this.spriteHeight = 210;
         this.width = this.spriteWidth / 4;
         this.height = this.spriteHeight / 4;
         this.x = this.game.width + 10 + Math.random() * this.game.width * 0.5;

@@ -2,7 +2,7 @@ import { Player } from './player.js';
 import { InputHandler } from './input.js';
 import { Background } from './background.js';
 import { states } from './playerStates.js';
-import { FlyingEnemy, GroundEnemy, HandEnemy, GroundZombieEnemy, ClimbingEnemy, SmallSpider, BatFlying, BatFlyingTwo, BatFlyingTree, RavenFlying, DiggerEnemy  } from './enemies.js';
+import { FlyingEnemy, SpinnerFlying, WormEnemy, GroundEnemy, HandEnemy, GroundZombieEnemy, ClimbingEnemy, SmallSpider, BatFlying, BatFlyingTwo, BatFlyingTree, RavenFlying, DiggerEnemy  } from './enemies.js';
 import { UI } from './ui.js';
 
 window.addEventListener('load', (e) => {
@@ -98,7 +98,8 @@ window.addEventListener('load', (e) => {
                     GroundEnemy,
                     DiggerEnemy,
                     GroundZombieEnemy,
-                    HandEnemy 
+                    HandEnemy,
+                    WormEnemy 
                 ]
 
                 const EnemyClass = groundEnemies[Math.floor(Math.random() * groundEnemies.length)];
@@ -117,7 +118,8 @@ window.addEventListener('load', (e) => {
                 BatFlying,
                 BatFlyingTwo,
                 BatFlyingTree,
-                RavenFlying
+                RavenFlying,
+                SpinnerFlying
                 ];
 
             const EnemyClass = flyingEnemies[Math.floor(Math.random() * flyingEnemies.length)];
