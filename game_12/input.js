@@ -11,7 +11,10 @@ export class InputHandler {
                 this.game.keys.push(e.key);
             } else if ( e.key === ' ') {
                 this.game.player.shootTop();
+            } else if ( e.key === 'd') {
+                this.game.debug = !this.game.debug;
             }
+            console.log(e.key);
         });
         window.addEventListener('keyup', (e) => {
             if (this.game.keys.indexOf(e.key) > -1){
