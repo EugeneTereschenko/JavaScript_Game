@@ -14,7 +14,7 @@ export class InputHandler {
             } else if ( e.key === 'd') {
                 this.game.debug = !this.game.debug;
             }
-            console.log(e.key);
+            //console.log(e.key);
         });
         window.addEventListener('keyup', (e) => {
             if (this.game.keys.indexOf(e.key) > -1){
