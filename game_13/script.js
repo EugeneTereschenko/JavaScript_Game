@@ -10,16 +10,19 @@ window.addEventListener('load', (e)=> {
     ctx.lineWidth = 3;
     ctx.strokeStyle = 'white';
     const game = new Game(canvas);
+    game.init();
+    console.log(game);
 
-    //console.log(game.mouse.x);
-    //console.log(game.mouse.y);
 
+    let lastTime = 0;
+    function animate(timeStamp){
 
-    function animate(){
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        game.render(ctx);
+        const deltaTime = timeStamp - lastTime;
+        lastTime = timeStamp;
+
+        game.render(ctx, deltaTime);
         window.requestAnimationFrame(animate);
     }
 
-    animate();
+    animate(0);
 })

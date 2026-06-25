@@ -7,24 +7,24 @@ export class InputHandler{
             this.game.mouse.y = e.offsetY;
             this.game.mouse.pressed = true;
 
-            //console.log(this.game.mouse.x);
-            //console.log(this.game.mouse.y);
         });
         canvas.addEventListener('mouseup', (e) => {
             this.game.mouse.x = e.offsetX;
             this.game.mouse.y = e.offsetY;
             this.game.mouse.pressed = false;
 
-            //console.log(this.game.mouse.x);
-            //console.log(this.game.mouse.y);
         });
         canvas.addEventListener('mousemove', (e) => {
-            this.game.mouse.x = e.offsetX;
-            this.game.mouse.y = e.offsetY;
-            console.log("mouse move");
-            console.log(this.game.mouse.x);
-            console.log(this.game.mouse.y);
-            console.log("##########");
+            if (this.game.mouse.pressed) {
+                this.game.mouse.x = e.offsetX;
+                this.game.mouse.y = e.offsetY;
+            }
+            //console.log("mouse move", this.game.mouse.x, this.game.mouse.y, "#######");
+        });
+        window.addEventListener('keydown', e => {
+            if (e.key == 'd'){
+                this.game.debug = !this.game.debug;
+            }
         });
     }
 }
