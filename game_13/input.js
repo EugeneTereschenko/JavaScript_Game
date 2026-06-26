@@ -24,6 +24,8 @@ export class InputHandler{
         window.addEventListener('keydown', e => {
             if (e.key == 'd'){
                 this.game.debug = !this.game.debug;
+            } else if (e.key == 'r') {
+                this.game.restart();
             }
         });
     }

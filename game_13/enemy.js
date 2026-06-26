@@ -8,18 +8,21 @@ export class Enemy {
         this.height = this.spriteHeight;
         this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5;
         this.collisionY = this.game.topMargin + (Math.random() * (this.game.height - this.game.topMargin));
-        this.speedX = Math.random() * 3 + 0.5;
-        this.image = document.getElementById('toad');
+        this.speedX = Math.random() * 3 + 1.5;
+        this.image = document.getElementById('toads');
         this.spriteX;
         this.spriteY;
+        this.frameX = 0;
+        this.frameY = Math.floor(Math.random() * 4);
     }
     update(){
         this.spriteX = this.collisionX - this.width * 0.5;
         this.spriteY = this.collisionY - this.height + 40;
         this.collisionX -= this.speedX;
-        if (this.spriteX + this.width < 0){
+        if (this.spriteX + this.width < 0 && !this.game.gameOver){
             this.collisionX = this.game.width + this.width + Math.random() * this.game.width * 0.5;
             this.collisionY = this.game.topMargin + (Math.random() * (this.game.height - this.game.topMargin));
+            this.frameY = Math.floor(Math.random() * 4);
         }
         let collisionObjects = [this.game.player, ...this.game.obstacles];
         collisionObjects.forEach(object => {
@@ -33,7 +36,7 @@ export class Enemy {
         });
     }
     draw(context){
-        context.drawImage(this.image, this.spriteX, this.spriteY);
+        context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height);
         if (this.game.debug){
             context.beginPath();
             context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);

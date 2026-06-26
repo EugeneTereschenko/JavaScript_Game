@@ -20,6 +20,16 @@ class Layer {
     draw(context){
         context.drawImage(this.image, this.x, this.y, this.width, this.height);
         context.drawImage(this.image, this.x + this.width, this.y, this.width, this.height);
+        if (this.game.gameOver){
+            this.modify(context);
+        }
+        
+    }
+    modify(context){
+            context.save();
+            context.fillStyle = 'rgba(0,0,0,0.5)';
+            context.fillRect(0, 0, this.width, this.height);
+            context.restore();
     }
 }
 

@@ -8,7 +8,10 @@ window.addEventListener('load', (e)=> {
 
     ctx.fillStyle = 'white';
     ctx.lineWidth = 3;
-    ctx.strokeStyle = 'white';
+    ctx.strokeStyle = 'black';
+    ctx.font = '40px Helvetica';
+    ctx.textAlign = 'center';
+
     const game = new Game(canvas);
     game.init();
     console.log(game);
@@ -21,7 +24,9 @@ window.addEventListener('load', (e)=> {
         lastTime = timeStamp;
 
         game.render(ctx, deltaTime);
-        window.requestAnimationFrame(animate);
+        //if (!game.gameOver) {
+            window.requestAnimationFrame(animate);
+        //}
     }
 
     animate(0);
