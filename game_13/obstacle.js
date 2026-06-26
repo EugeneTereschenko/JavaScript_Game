@@ -14,6 +14,9 @@ export class Obstacle {
         this.frameX = Math.floor(Math.random() * 4);
         this.frameY = Math.floor(Math.random() * 3);
     }
+    update(){
+        
+    }
     draw(context){
         context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height);
         if (this.game.debug){

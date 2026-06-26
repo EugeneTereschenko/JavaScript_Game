@@ -51,7 +51,7 @@ export class Game {
         }
 
         this.particles.forEach(particle => particle.update());
-        this.particles = this.particles.filter(particle => !particle.markForDeletion);
+        this.particles = this.particles.filter(particle => !particle.markedForDeletion);
 
         this.explosions.forEach(explosion => explosion.update(deltaTime));
         this.explosions = this.explosions.filter(explosion => !explosion.markedForDeletion);
@@ -75,7 +75,7 @@ export class Game {
             this.player.projectiles.forEach(projectile => {
                 if (this.checkCollision(projectile, enemy)){
                     enemy.lives--;
-                    projectile.markForDeletion = true;
+                    projectile.markedForDeletion = true;
                     this.particles.push(new Particle(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
                     if (enemy.lives <= 0){
                         

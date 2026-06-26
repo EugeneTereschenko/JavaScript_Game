@@ -13,11 +13,14 @@ export class Egg {
         this.height = this.spriteHeight;
         this.spriteX;
         this.spriteY;
+        this.hatchTimer = 0;
+        this.hatchInterval = 5000;
+        this.markedForDeletion = false;
     }
-    update(){
+    update(deltaTime){
         this.spriteX = this.collisionX - this.width * 0.5;
         this.spriteY = this.collisionY - this.height * 0.5 - 35;
-        let collisionObjects = [this.game.player, ...this.game.obstacles];
+        let collisionObjects = [this.game.player, ...this.game.obstacles, ...this.game.enemies];
         collisionObjects.forEach(object => {
             let [collision, distance, sumOfRadii, dx, dy] = this.game.checkCollision(this, object);
             if (collision){
@@ -27,6 +30,12 @@ export class Egg {
                 this.collisionY = object.collisionY + (sumOfRadii + 1) * unit_y;
             }
         });
+
+        if (this.hatchTimer > this.hatchInterval){
+
+        } else {
+            this.hatchTimer += deltaTime;
+        }
     }
     draw(context){
         context.drawImage(this.image, this.spriteX, this.spriteY, this.width, this.height);

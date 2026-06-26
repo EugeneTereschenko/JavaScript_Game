@@ -8,13 +8,13 @@ export class Projectile {
         this.width = 10;
         this.height = 3;
         this.speedX = 3;
-        this.markForDeletion = false;
+        this.markedForDeletion = false;
         this.image = document.getElementById('projectile');
     }
     update(){
         this.x += this.speedX;
         if (this.x > this.game.width * 0.8) {
-            this.markForDeletion = true;
+            this.markedForDeletion = true;
         }
     }
     draw(context){
@@ -39,7 +39,7 @@ export class Particle {
         this.speedX = Math.random() * 6 - 3;
         this.speedY = Math.random() * -15;
         this.gravity = 0.5;
-        this.markForDeletion = false;
+        this.markedForDeletion = false;
         this.angle = 0;
         this.va = Math.random() * 0.2 - 0.1;
         this.bounced = 0;
@@ -51,7 +51,7 @@ export class Particle {
         this.x -= this.speedX + this.game.speed;
         this.y += this.speedY;
         if (this.y > this.game.height + this.size  || this.x < 0 - this.size) {
-            this.markForDeletion = true;
+            this.markedForDeletion = true;
         }
         if (this.y > this.game.height - this.bottomBounceBoundary && this.bounced < 5){
             this.bounced++;
@@ -82,7 +82,7 @@ class Explosion {
             this.fps = 30;
             this.timer = 0;
             this.interval = 1000 / this.fps;
-            this.markForDeletion = false;
+            this.markedForDeletion = false;
             this.maxFrame = 8;
         }
         update(deltaTime){
@@ -95,7 +95,7 @@ class Explosion {
             }
 
             if (this.frameX > this.maxFrame) {
-                this.markForDeletion = true;
+                this.markedForDeletion = true;
             }
         }
         draw(context){

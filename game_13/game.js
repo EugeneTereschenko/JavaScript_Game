@@ -3,6 +3,7 @@ import { InputHandler } from "./input.js";
 import { Background } from "./background.js";
 import { Obstacle } from "./obstacle.js";
 import { Egg } from "./egg.js";
+import { Enemy } from "./enemy.js";
 
 export class Game {
     constructor(canvas){
@@ -17,15 +18,17 @@ export class Game {
             pressed: false
         }
         this.speed = 0;
-        this.fps = 70;
+        this.fps = 40;
         this.timer = 0;
         this.interval = 1000/this.fps;
         this.eggTimer = 0;
-        this.eggInterval = 500;
+        this.eggInterval = 1000;
         this.numberOfObstacles = 10;
-        this.maxEggs = 10;
+        this.maxEggs = 20;
         this.obstacles = [];
         this.eggs = [];
+        this.enemies = [];
+        this.gameObjects = [];
         this.player = new Player(this);
         this.input = new InputHandler(this, this.canvas);
         this.background = new Background(this);
@@ -36,14 +39,20 @@ export class Game {
         if (this.timer > this.interval){
             context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.background.draw(context);
-            this.background.update();
-            this.obstacles.forEach(obstacle => obstacle.draw(context));
-            this.eggs.forEach(egg => {
-                egg.draw(context);
-                egg.update();
+            this.background.update(deltaTime);
+
+            this.gameObjects = [...this.eggs, ...this.obstacles, this.player, ...this.enemies];
+
+
+            this.gameObjects.sort((a, b) => {
+                return a.collisionY - b.collisionY;
             });
-            this.player.draw(context);
-            this.player.update();
+
+            this.gameObjects.forEach(object => {
+                object.draw(context);
+                object.update();
+            });
+
             this.timer = 0;
         }
         this.timer += deltaTime;
@@ -68,7 +77,13 @@ export class Game {
     addEgg(){
         this.eggs.push(new Egg(this));
     }
+    addEnemy(){
+        this.enemies.push(new Enemy(this));
+    }
     init() {
+        for (let i = 0; i < 3; i++){
+            this.addEnemy();
+        }
         let attempts = 0;
         while(this.obstacles.length < this.numberOfObstacles && attempts < 500) {
             let testObstacle = new Obstacle(this);

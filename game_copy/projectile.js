@@ -8,12 +8,12 @@ export class Projectile {
         this.width = 10;
         this.height = 3;
         this.speedX = 3;
-        this.markForDeletion = false;
+        this.markedForDeletion = false;
     }
     update(){
         this.x += this.speedX;
         if (this.x > this.game.width * 0.8) {
-            this.markForDeletion = true;
+            this.markedForDeletion = true;
         }
     }
     draw(context){

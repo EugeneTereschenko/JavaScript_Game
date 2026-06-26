@@ -38,7 +38,7 @@ export class Player {
         this.projectiles.forEach(projectile => {
             projectile.update();
         });
-        this.projectiles = this.projectiles.filter(projectile => !projectile.markForDeletion);
+        this.projectiles = this.projectiles.filter(projectile => !projectile.markedForDeletion);
         if (this.frameX < this.maxFrame){
             this.frameX++;
         } else {
