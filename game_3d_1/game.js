@@ -1,5 +1,5 @@
 import * as THREE from "https://unpkg.com/three@0.180.0/build/three.module.js";
-import { CubePlayer } from "./cubePlayer.js";
+import { Box } from "./box.js";
 
 export class Game{
     constructor(innerWidth, innerHeight){
@@ -11,19 +11,29 @@ export class Game{
         this.renderer = new THREE.WebGLRenderer({
             antialias: true
         });
-        this.cube = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial({
-            color: 0x00ff00
-        }));
-        this.cube = new THREE.Mesh(
-            new THREE.BoxGeometry(),
-            new THREE.MeshStandardMaterial({ color: 0x00ff00 })
-        );
-        this.ground = new THREE.Mesh(
-            new THREE.BoxGeometry(5, 0.5, 10),
-            new THREE.MeshStandardMaterial({
-                color: 0x808080
-            })
-        );
+        this.ground = new Box({
+            width: 5,
+            height: 0.5,
+            depth: 10, 
+            color: '#808080',
+            position: {
+                x: 0,
+                y: -2,
+                z: 0
+            }
+        }); 
+        this.cube = new Box({
+            width: 1,
+            height: 1,
+            depth: 1,
+            velocity: {
+                x: 0,
+                y: -0.1,
+                z: 0
+            }
+        });
+
+        
         this.sun = new THREE.DirectionalLight(0xffffff, 3);
         this.ambient = new THREE.AmbientLight(0xffffff, 0.5);
 
@@ -34,13 +44,12 @@ export class Game{
         };
 
         window.addEventListener("resize", this.handleResize);
-        this.cubePlayer = new CubePlayer(this.cube);
     }
     init(){
         this.cube.castShadow = true;
         this.scene.background = this.color;
 
-        this.camera.position.set(3, 3, 6);
+        this.camera.position.set(3, 3, 9);
         this.camera.lookAt(0, 0, 0);
 
 
@@ -52,9 +61,7 @@ export class Game{
 
         this.scene.add(this.cube);
 
-        //this.ground.rotation.x = -Math.PI / 2;
         this.ground.receiveShadow = true;
-        this.ground.position.y = -2;
         this.scene.add(this.ground);
 
         this.sun.position.set(5, 10, 5);
@@ -64,9 +71,8 @@ export class Game{
         this.scene.add(this.ambient);
     }
     update(){
-        this.cubePlayer.cube.rotation.x += 0.01;
-        this.cubePlayer.cube.rotation.y += 0.01;
-        this.cubePlayer.update();
+
+        this.cube.update(this.ground);
         this.renderer.render(this.scene, this.camera);
     }
 }

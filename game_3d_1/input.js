@@ -1,6 +1,5 @@
 export class InputHandler {
-    constructor(cube){
-        this.cube = cube;
+    constructor(){
         this.keys = [];
 
         window.addEventListener('keydown', (e) => {
