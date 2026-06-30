@@ -3,14 +3,16 @@ export class InputHandler {
         this.keys = [];
 
         window.addEventListener('keydown', (e) => {
+            console.log(e.key); 
             if ((e.key === 'ArrowDown' ||
                 e.key === 'ArrowUp' ||
                 e.key === 'ArrowLeft' ||
                 e.key === 'ArrowRight' ||
+                e.key === ' ' ||
                 e.key === 'Enter'
             ) && this.keys.indexOf(e.key) === -1)
             {
-                this.keys.push(e.key);
+                this.keys.push(e.key); 
             }
         });
         window.addEventListener('keyup', (e) =>{
@@ -18,6 +20,7 @@ export class InputHandler {
                 e.key === 'ArrowUp' ||
                 e.key === 'ArrowLeft' ||
                 e.key === 'ArrowRight' ||
+                e.key === ' ' ||
                 e.key === 'Enter'
             )
             {
