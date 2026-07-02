@@ -63,6 +63,35 @@ export class UIManager {
 
 
     showLevelTransition(levelName){
-        
+        const transitionDiv = documnet.createElement('div');
+        trantitionDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: trannslate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: #fff;
+        padding: 40px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 32px;
+        z-index: 200;
+        `;
+        transitionDiv.innerHTML = `
+            <div style="margin-bottom: 20px;">LEVEL UP!</div>
+            <div style="font-size: 24px;">${levelName}</div>
+        `;
+        document.body.appendChild(transitionDiv);
+
+        setTimeout(() => {
+            transitionDiv.remove();
+        }, 2000);
+    }
+
+
+    remove() {
+        if (this.uiContainer && this.uiContainer.parentNore){
+            this.uiContainer.parentNode.removeChild(this.uiContainer);
+        }
     }
 }
