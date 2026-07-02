@@ -1,17 +1,25 @@
 
 import { Game } from "./game.js";
+import { UIManager } from "./ui.js";
 
 
 const game = new Game(window.innerWidth, window.innerHeight);
-    game.init();
+const uiManager = new UIManager();
+    
+game.init();
 
+let animationId = null;
 let frames = 0;
+
 function animate() {
 
-    const animationId = requestAnimationFrame(animate);
-
-    game.update(animationId, frames);
+    animationId = requestAnimationFrame(animate);
     frames++;
+    game.update(animationId, frames);
+    
+
+    const levelInfo = game.getLevelInfo();
+    uiManager.update(levelInfo);
 }
 
 animate();

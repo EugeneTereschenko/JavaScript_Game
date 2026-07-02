@@ -1,8 +1,25 @@
 body {
     margin: 0;
     overflow: hidden;
+    background-color: #0f172a;
 }
 
 canvas {
     display: block;
+}
+
+#ui-container {
+    font-family: 'Arial', sans-serif;
+}
+
+#level-info,
+#score-info {
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+#level-info:hover,
+#score-info:hover {
+    background: rgba(0,0,0,0.7);
+    transform: translateX(5px);
 }
