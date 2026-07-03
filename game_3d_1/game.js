@@ -51,6 +51,8 @@ export class Game{
             this.renderer.setSize(window.innerWidth, window.innerHeight);
         };
 
+        this.dangerMargin = 1.5; // Minimum distance to consider for collision avoidance  
+
         window.addEventListener("resize", this.handleResize);
     }
     setupLevel(){
@@ -145,7 +147,6 @@ export class Game{
     }
 
     avoidEnemyObstacleCollision(enemy) {
-        const dangerMargin = 1;
         let nearestObstacle = null;
         let nearestDistance = Infinity;
 
@@ -158,12 +159,42 @@ export class Game{
         }
 
         if (!nearestObstacle) return;
-        console.log(`Nearest obstacle distance:`, nearestObstacle.dist);
+        //console.log(`Nearest obstacle distance:`, nearestObstacle.dist);
         const { obstacle, dist } = nearestObstacle;
-        if (dist.xDistance === 0 && dist.yDistance === 0 && dist.zDistance < dangerMargin) {
+        if (dist.xDistance === 0 && dist.yDistance === 0 && dist.zDistance < this.dangerMargin) {
             const direction = enemy.position.x <= obstacle.position.x ? -1 : 1;
             enemy.velocity.z = 0.02 * direction;
-            enemy.velocity.x = 0.02 * direction;
+            enemy.velocity.x = 0.2 * direction;
+        }
+    }
+
+    checkEnemyCollisions() {
+        // Check collision between all enemies
+        for (let i = 0; i < this.enemies.length; i++) {
+            for (let j = i + 1; j < this.enemies.length; j++) {
+                const enemy1 = this.enemies[i];
+                const enemy2 = this.enemies[j];
+
+                if (enemy1.checkCollision(enemy2)) {
+                    //console.log('Enemy collision detected');
+                    //enemy1.velocity.z = +enemy1.velocity.z + (Math.random() - 0.5) * 0.01; // Add a slight random factor to avoid perfect reversal
+                    //if (Math.random() < 0.5) {
+                        enemy2.velocity.x = +enemy2.velocity.x + (Math.random() - 0.5) * 0.1; // Add a slight random factor to avoid perfect reversal
+                    //} else {
+                    //    enemy2.velocity.x = -enemy2.velocity.x + (Math.random() - 0.5) * 0.1; // Add a slight random factor to avoid perfect reversal
+                   // }
+                    
+                    //enemy2.velocity.z = -enemy2.velocity.z;
+                    // Option 1: Remove both enemies
+                    //this.scene.remove(enemy1);
+                    //this.scene.remove(enemy2);
+                    //this.enemies.splice(j, 1);
+                    //this.enemies.splice(i, 1);
+                    //this.enemiesDefeated += 2;
+                    //this.score += 100; // Bonus for collision
+                    break;
+                }
+            }
         }
     }
 
@@ -182,12 +213,15 @@ export class Game{
         }
 
 
+        // Check enemy-to-enemy collisions
+        this.checkEnemyCollisions();
+
         this.enemies.forEach(enemy => {
             enemy.update(this.ground);
 
             let obstacleCollision = false;
             for (let obstacle of this.obstacles){
-                console.log(`Distance to obstacles:`, obstacle.getDistance(enemy));
+                //console.log(`Distance to obstacles:`, obstacle.getDistance(enemy));
                 if (obstacle.checkCollision(enemy)){
                     obstacleCollision = true;
                     break;
@@ -209,13 +243,15 @@ export class Game{
                 window.cancelAnimationFrame(animationId);
             }
             enemy.updateEnemy();
+
+            this.checkEnemyCollisions();
         });
 
         if (frames % this.spawnRate === 0){
             this.addEnemy();
             if (this.spawnRate > 20) {
                 this.spawnRate -= 10;
-                console.log('New spawn rate:', this.spawnRate);
+                //console.log('New spawn rate:', this.spawnRate);
             }
         }
 
