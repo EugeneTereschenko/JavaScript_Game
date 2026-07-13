@@ -13,11 +13,12 @@ export class Obstacle extends PhysicsObject {
         });
         super(geometry, material, {
             ...config,
-            gravity: 0
+            gravity: -0.002
         });
     }
 
-    update() {
+    update(ground) {
         this.updateBounds();
+        this.applyGravity(ground);
     }
 }
