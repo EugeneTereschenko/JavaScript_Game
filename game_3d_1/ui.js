@@ -1,5 +1,5 @@
 export class UIManager {
-    constructor(){
+    constructor() {
         this.uiContainer = null;
         this.levelDisplay = null;
         this.scoreDisplay = null;
@@ -18,7 +18,7 @@ export class UIManager {
             font-size: 18px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
             z-index: 100;
-            `;
+        `;
 
         this.levelDisplay = document.createElement('div');
         this.levelDisplay.id = 'level-info';
@@ -30,10 +30,10 @@ export class UIManager {
             border-radius: 4px;
         `;
 
-        this.scoreDisplay = document.createElement('dev');
+        this.scoreDisplay = document.createElement('div');
         this.scoreDisplay.id = 'score-info';
         this.scoreDisplay.style.cssText = `
-            padding: 10 px;
+            padding: 10px;
             background: rgba(0, 0, 0, 0.5);
             border-left: 4px solid #10b981;
             border-radius: 4px;
@@ -44,53 +44,48 @@ export class UIManager {
         document.body.appendChild(this.uiContainer);
     }
 
-    update(levelInfo){
-        if (this.levelDisplay){
-            this.levelDisplay.innerHTML =`
+    update(levelInfo) {
+        if (this.levelDisplay) {
+            this.levelDisplay.innerHTML = `
                 <div><strong>Level ${levelInfo.levelNumber}:</strong> ${levelInfo.levelName}</div>
                 <div style="font-size: 14px; color: #cbd5e1; margin-top: 5px;">${levelInfo.levelNumber} of ${levelInfo.totalLevels}</div>
             `;
         }
-
-
         if (this.scoreDisplay) {
             this.scoreDisplay.innerHTML = `
-                <div><strong>Score:</strong>${levelInfo.score}</div>
+                <div><strong>Score:</strong> ${levelInfo.score}</div>
                 <div style="font-size: 14px; color: #cbd5e1;">Enemies Defeated: ${levelInfo.enemiesDefeated}</div>
             `;
         }
     }
 
-
-    showLevelTransition(levelName){
-        const transitionDiv = documnet.createElement('div');
-        trantitionDiv.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: trannslate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.9);
-        color: #fff;
-        padding: 40px;
-        border-radius: 10px;
-        text-align: center;
-        font-size: 32px;
-        z-index: 200;
+    showLevelTransition(levelName) {
+        const transitionDiv = document.createElement('div');
+        transitionDiv.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 32px;
+            z-index: 200;
         `;
         transitionDiv.innerHTML = `
-            <div style="margin-bottom: 20px;">LEVEL UP!</div>
+            <div style="margin-bottom: 20px;">🎮 LEVEL UP! 🎮</div>
             <div style="font-size: 24px;">${levelName}</div>
         `;
         document.body.appendChild(transitionDiv);
-
         setTimeout(() => {
             transitionDiv.remove();
         }, 2000);
     }
 
-
     remove() {
-        if (this.uiContainer && this.uiContainer.parentNore){
+        if (this.uiContainer && this.uiContainer.parentNode) {
             this.uiContainer.parentNode.removeChild(this.uiContainer);
         }
     }

@@ -1,120 +1,45 @@
-import * as THREE from "https://unpkg.com/three@0.180.0/build/three.module.js";
-import { InputHandler } from "./input.js";
+import * as THREE from 'https://unpkg.com/three@0.180.0/build/three.module.js';
+import { InputHandler } from './input.js';
+import { PhysicsObject } from './physicsObject.js';
+import { GAME_CONFIG } from './constants.js';
 
-
-export class Box extends THREE.Mesh {
-    constructor({
-        width,
-        height,
-        depth, 
-        color ='#00ff00',
-        velocity = {
-            x: 0,
-            y: 0,
-            z: 0
-        },
-        position = {
-            x: 0,
-            y: 0,
-            z: 0
-        }
-    }){
-        super(new THREE.BoxGeometry(width, height, depth), new THREE.MeshStandardMaterial({color}));
-
-        this.width = width;
-        this.height = height;
-        this.depth = depth;
-        this.position.set(position.x, position.y, position.z);
-
-
-        this.right = this.position.x + this.width / 2;
-        this.left = this.position.x - this.width / 2;
-
-        this.bottom = this.position.y - this.height / 2;
-        this.top = this.position.y + this.height / 2;
-
-        this.front = this.position.z + this.depth / 2;
-        this.back = this.position.z - this.depth / 2;
-
-        this.velocity = velocity;
-        this.gravity = -0.002;
-
-        this.input = new InputHandler();
+export class Box extends PhysicsObject {
+    constructor(config = {}) {
+        const geometry = new THREE.BoxGeometry(
+            config.width || GAME_CONFIG.PLAYER.WIDTH,
+            config.height || GAME_CONFIG.PLAYER.HEIGHT,
+            config.depth || GAME_CONFIG.PLAYER.DEPTH
+        );
+        const material = new THREE.MeshStandardMaterial({ color: config.color || '#00ff00' });
+        super(geometry, material, config);
+        this.input = config.isEnemy ? null : new InputHandler();
+        this.isEnemy = config.isEnemy || false;
     }
-    update(ground){
-        // apply velocity first, then recalc bounds
 
-        this.updateSides();
-
-
-        this.position.x += this.velocity.x;
-        this.position.z += this.velocity.z;
-
-
-        this.updateSides();
-
-        this.applyGravity(ground);
-
-    }
-    updateEnemy(){
-        this.velocity.x = 0;
-        this.velocity.z += 0.001;
-    }
-    updateInput(){
+    updateInput() {
+        if (!this.input) return;
         this.velocity.x = 0;
         this.velocity.z = 0;
-
-        if (this.input.keys.includes('ArrowLeft')){
-            this.velocity.x = -0.1;
-        }
-        if (this.input.keys.includes('ArrowRight')){
-            this.velocity.x = 0.1;
-        }
-        if (this.input.keys.includes('ArrowUp')){
-            this.velocity.z -= 0.1;
-        }
-        if (this.input.keys.includes('ArrowDown')){
-            this.velocity.z += 0.1;
-        }
-        if (this.input.keys.includes(' ')){
-            this.velocity.y = 0.08;
-        }
-    }
-    updateSides(){
-        this.right = this.position.x + this.width / 2;
-        this.left = this.position.x - this.width / 2;
-
-        this.bottom = this.position.y - this.height / 2;
-        this.top = this.position.y + this.height / 2;
-
-        this.front = this.position.z + this.depth / 2;
-        this.back = this.position.z - this.depth / 2;
-    }
-    checkCollision(box){
-        const xCollision = box.right >= this.left && box.left <= this.right;
-        const yCollision = box.bottom + box.velocity.y <= this.top && box.top >= this.bottom;
-        const zCollision = box.front >= this.back && box.back <= this.front;
-
-        return xCollision && yCollision && zCollision;
-    }
-    boxCollision(box1, box2){
-        const xCollision = box1.right >= box2.left && box1.left <= box2.right;
-        const yCollision = box1.bottom + box1.velocity.y <= box2.top && box1.top >= box2.bottom;
-        const zCollision = box1.front >= box2.back && box1.back <= box2.front;
-
-        return (xCollision && yCollision && zCollision);
-    }
-    applyGravity(ground){
-        this.velocity.y += this.gravity;
-
-        if (this.boxCollision(this, ground)){
-            const friction = 0.5;
-            this.velocity.y *= friction;
-            this.velocity.y = -this.velocity.y;
-
-        } else {
-            this.position.y += this.velocity.y;
-        }
+        const keys = this.input.keys;
+        const speed = GAME_CONFIG.PLAYER.MOVE_SPEED;
+        if (keys.includes('ArrowLeft')) this.velocity.x = -speed;
+        if (keys.includes('ArrowRight')) this.velocity.x = speed;
+        if (keys.includes('ArrowUp')) this.velocity.z -= speed;
+        if (keys.includes('ArrowDown')) this.velocity.z += speed;
+        if (keys.includes(' ')) this.velocity.y = GAME_CONFIG.PLAYER.JUMP_FORCE;
     }
 
+    updateEnemy() {
+        if (!this.isEnemy) return;
+        this.velocity.x = 0;
+        this.velocity.z += GAME_CONFIG.ENEMY.ACCELERATION;
+    }
+
+    update(ground) {
+        this.updateBounds();
+        this.position.x += this.velocity.x;
+        this.position.z += this.velocity.z;
+        this.updateBounds();
+        this.applyGravity(ground);
+    }
 }
