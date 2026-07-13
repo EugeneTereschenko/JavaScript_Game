@@ -1,6 +1,6 @@
 export class LevelManager {
     constructor() {
-        this.currentLevel = 1;
+        this.currentLevel = 5;
         this.levels = this.initializeLevels();
     }
 

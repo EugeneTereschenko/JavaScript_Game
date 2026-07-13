@@ -25,7 +25,9 @@ export class Game {
         this.levelManager = new LevelManager();
         this.collisionSystem = new CollisionSystem({
             enemyObstacleMode: GAME_CONFIG.COLLISION.MODES.BLOCK_PLAYER_ONLY,
-            collisionRadius: 3 // Collision radius for enemy-obstacle avoidance\n        });\n        this.enemyManager = null;
+            collisionRadius: 3 // Collision radius for enemy-obstacle avoidance\n       
+             });
+        this.enemyManager = null;
         this.score = 0;
         this.levelStartTime = Date.now();
         this.spawnRate = 200;
@@ -92,7 +94,7 @@ export class Game {
         });
         this.ground.receiveShadow = true;
         this.scene.add(this.ground);
-        this.cube.position.set(0, 0, 0);
+        this.cube.position.set(0, 0, -5);
         this.cube.velocity = { x: 0, y: -0.1, z: 0 };
         level.obstacles.forEach(obstacleConfig => {
             const obstacle = new Obstacle(obstacleConfig);
@@ -108,6 +110,7 @@ export class Game {
         this.cube.update(this.ground);
         this.cube.updateInput();
         for (let obstacle of this.obstacles) {
+            obstacle.update(this.ground);
             if (this.collisionSystem.checkAABBCollision(this.cube, obstacle)) {
                 console.log('Player hit obstacle - Game Over!');
                 window.cancelAnimationFrame(animationId);
@@ -124,6 +127,7 @@ export class Game {
                 this.spawnRate -= 10;
             }
         }
+        
         this.score = Math.floor((Date.now() - this.levelStartTime) / 100);
         this.renderer.render(this.scene, this.camera);
     }
