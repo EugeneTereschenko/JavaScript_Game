@@ -57,7 +57,8 @@ export class Box extends THREE.Mesh {
 
     }
     updateEnemy(){
-        this.velocity.z += 0.0003;
+        this.velocity.x = 0;
+        this.velocity.z += 0.001;
     }
     updateInput(){
         this.velocity.x = 0;
@@ -88,6 +89,13 @@ export class Box extends THREE.Mesh {
 
         this.front = this.position.z + this.depth / 2;
         this.back = this.position.z - this.depth / 2;
+    }
+    checkCollision(box){
+        const xCollision = box.right >= this.left && box.left <= this.right;
+        const yCollision = box.bottom + box.velocity.y <= this.top && box.top >= this.bottom;
+        const zCollision = box.front >= this.back && box.back <= this.front;
+
+        return xCollision && yCollision && zCollision;
     }
     boxCollision(box1, box2){
         const xCollision = box1.right >= box2.left && box1.left <= box2.right;
