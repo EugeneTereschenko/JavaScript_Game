@@ -24,9 +24,8 @@ export class Game {
         this.renderer.shadowMap.enabled = true;
         this.levelManager = new LevelManager();
         this.collisionSystem = new CollisionSystem({
-            enemyObstacleMode: GAME_CONFIG.COLLISION.MODES.BLOCK_PLAYER_ONLY
-        });
-        this.enemyManager = null;
+            enemyObstacleMode: GAME_CONFIG.COLLISION.MODES.BLOCK_PLAYER_ONLY,
+            collisionRadius: 3 // Collision radius for enemy-obstacle avoidance\n        });\n        this.enemyManager = null;
         this.score = 0;
         this.levelStartTime = Date.now();
         this.spawnRate = 200;
@@ -117,6 +116,7 @@ export class Game {
         }
         this.enemyManager.updateAll(this.ground);
         this.checkEnemyObstacleCollisions();
+        this.checkEnemyObstacleAvoidance();
         this.checkEnemyPlayerCollisions(animationId);
         if (frames % this.spawnRate === 0) {
             this.enemyManager.spawnEnemy(this.enemySpeedMultiplier);
@@ -134,6 +134,17 @@ export class Game {
             for (let obstacle of this.obstacles) {
                 if (this.collisionSystem.checkAABBCollision(enemy, obstacle)) {
                     this.collisionSystem.handleEnemyObstacleCollision(enemy, obstacle);
+                }
+            }
+        }
+    }
+
+    checkEnemyObstacleAvoidance() {
+        const enemies = this.enemyManager.getAll();
+        for (let enemy of enemies) {
+            for (let obstacle of this.obstacles) {
+                if (this.collisionSystem.checkRadiusCollision(enemy, obstacle)) {
+                    this.collisionSystem.handleEnemyObstacleAvoidance(enemy, obstacle);
                 }
             }
         }
@@ -158,6 +169,10 @@ export class Game {
 
     setCollisionMode(mode) {
         return this.collisionSystem.setEnemyObstacleMode(mode);
+    }
+
+    setCollisionRadius(radius) {
+        this.collisionSystem.setCollisionRadius(radius);
     }
 
     getLevelInfo() {
