@@ -2,19 +2,29 @@ export class CollisionSystem {
     constructor(config = {}) {
         this.enemyObstacleMode = config.enemyObstacleMode || 'block-player-only';
         this.collisions = [];
-        this.collisionRadius = config.collisionRadius || 2; // Distance threshold for collision avoidance\n    
-     }
-     
+        this.collisionRadius = config.collisionRadius || 2; // Distance threshold for enemy-obstacle avoidance
+        this.enemyCollisionRadius = config.enemyCollisionRadius || 1.5; // Distance threshold for enemy-enemy avoidance
+    }
+
     checkAABBCollision(box1, box2) {
         const xCollision = box1.right >= box2.left && box1.left <= box2.right;
         const yCollision = box1.top >= box2.bottom && box1.bottom <= box2.top;
         const zCollision = box1.front >= box2.back && box1.back <= box2.front;
         return xCollision && yCollision && zCollision;
     }
+
     checkRadiusCollision(box1, box2, radius = this.collisionRadius) {
         const dx = box1.position.x - box2.position.x;
         const dy = box1.position.y - box2.position.y;
         const dz = box1.position.z - box2.position.z;
+        const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        return distance <= radius;
+    }
+
+    checkEnemyRadiusCollision(enemy1, enemy2, radius = this.enemyCollisionRadius) {
+        const dx = enemy1.position.x - enemy2.position.x;
+        const dy = enemy1.position.y - enemy2.position.y;
+        const dz = enemy1.position.z - enemy2.position.z;
         const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
         return distance <= radius;
     }
@@ -87,6 +97,22 @@ export class CollisionSystem {
         }
     }
 
+    handleEnemyEnemyAvoidance(enemy1, enemy2, radius = this.enemyCollisionRadius) {
+        const dx = enemy1.position.x - enemy2.position.x;
+        const dz = enemy1.position.z - enemy2.position.z;
+        const distance = Math.sqrt(dx * dx + dz * dz);
+
+        if (distance < radius && distance > 0) {
+            const normalizedX = dx / distance;
+            const normalizedZ = dz / distance;
+
+            // Push enemy1 away from enemy2
+            enemy1.position.x += normalizedX * 0.03;
+            enemy1.position.z += normalizedZ * 0.03;
+            enemy1.velocity.x = normalizedX * 0.05;
+        }
+    }
+
     bounceOff(object, obstacle) {
         const dx = Math.abs(object.position.x - obstacle.position.x);
         const dz = Math.abs(object.position.z - obstacle.position.z);
@@ -104,6 +130,10 @@ export class CollisionSystem {
 
     setCollisionRadius(radius) {
         this.collisionRadius = radius;
+    }
+
+    setEnemyCollisionRadius(radius) {
+        this.enemyCollisionRadius = radius;
     }
 
     setEnemyObstacleMode(mode) {
